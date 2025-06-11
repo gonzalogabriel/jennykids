@@ -65,4 +65,7 @@ supabase/.temp
 .env.supabase
 
 # Archivos de configuración de MercadoPago
-mercadopago.config.local.js 
+mercadopago.config.local.js
+
+# Repositorios anidados
+servers/ 
