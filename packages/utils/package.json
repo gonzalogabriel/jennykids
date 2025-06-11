@@ -1,0 +1,19 @@
+{
+  "name": "@jennykids/utils",
+  "version": "0.1.0",
+  "private": true,
+  "main": "./src/index.ts",
+  "types": "./src/index.ts",
+  "scripts": {
+    "lint": "eslint .",
+    "build": "tsc"
+  },
+  "dependencies": {
+    "zod": "^3.22.4",
+    "date-fns": "^3.3.1"
+  },
+  "devDependencies": {
+    "typescript": "^5.3.3",
+    "eslint": "^8.57.0"
+  }
+} 

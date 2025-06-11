@@ -1,0 +1,209 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+# 🧠 .cursorrules – Tienda Digital "Jenny Kids" 👶 (Next.js 14 + Supabase + MercadoPago 🇨🇴)
+
+Este proyecto es una tienda digital moderna, responsiva y optimizada para Colombia. Usa tecnologías modernas para ofrecer una experiencia fluida, segura y adaptable desde móviles hasta escritorio. Este archivo configura a la IA de Cursor para ayudarte a generar código limpio, funcional y alineado con las mejores prácticas de Next.js 14, Tailwind CSS y TypeScript.
+
+---
+
+## 🚀 Stack tecnológico
+
+- **Next.js 14** con App Router y Server Components
+- **TypeScript** en todo el código
+- **Tailwind CSS** para estilizado 100% utilitario
+- **Supabase** para:
+  - Autenticación
+  - Base de datos PostgreSQL
+  - Almacenamiento de productos e imágenes
+- **MercadoPago** para pagos en Colombia (preferencia + webhook)
+- **Vercel** como plataforma de despliegue
+
+---
+
+## 📁 Estructura recomendada
+
+apps/
+└── web/              → Frontend principal (Next.js)
+
+packages/
+├── ui/               → Componentes reutilizables (Button, ProductCard, etc.)
+├── db/               → Supabase: esquema, queries, funciones de acceso
+└── utils/            → Funciones auxiliares y validaciones globales
+
+---
+
+## 🎨 Estilos (Tailwind CSS + Shadcn UI)
+
+- Usa solo clases de Tailwind (evitar CSS externo).
+- Agrupa clases condicionales con `clsx()` o `cn()`.
+- Usa `@shadcn/ui` y `radix-ui` para modales, tabs, tooltips, etc.
+- Diseña siempre **mobile-first**.
+- Sigue una escala de espaciado y tipografía consistente (`text-sm`, `font-medium`, etc.).
+
+---
+
+## 🔐 Autenticación con Supabase
+
+- Soporta login con email/password y Magic Link.
+- Maneja sesiones con el cliente oficial de Supabase.
+- Protege rutas y componentes privados con lógica de autenticación en el servidor.
+
+---
+
+## 🛒 E-commerce funcional
+
+- Modela estas entidades en Supabase:
+  - `products`, `categories`, `cart_items`, `orders`
+- Implementa lógica CRUD usando Server Actions o API routes.
+- Subida de imágenes de productos usando Supabase Storage.
+- Integración con MercadoPago (ver siguiente sección).
+
+---
+
+## 💳 Pagos con MercadoPago 🇨🇴
+
+- Usa el SDK oficial de MercadoPago (Node.js).
+- Flujo:
+  1. `/api/create-order`: genera preferencia de pago y retorna `init_point`
+  2. Redirección a MercadoPago
+  3. Callback a `/success` o `/failure`
+  4. Webhook a `/api/mercadopago-webhook` actualiza estado del pedido
+- Moneda: **COP**
+- Métodos: Tarjetas locales, PSE, Efectivo
+- Usa variables de entorno seguras:
+  ```env
+  MP_ACCESS_TOKEN=***
+  MP_PUBLIC_KEY=***
+
+
+🧱 Componentes y arquitectura
+	•	Sigue arquitectura component-based.
+	•	Usa Server Components por defecto.
+	•	Usa Client Components solo cuando se necesite interactividad (ej. modales, formulario controlado).
+	•	Define interfaces TypeScript para props:
+
+interface ProductCardProps {
+  title: string;
+  price: number;
+}
+
+export const ProductCard = ({ title, price }: ProductCardProps) => {
+  return (...)
+};
+
+⚙️ Data fetching y rutas
+	•	Usa fetch() en Server Components:
+	const res = await fetch('https://api.jennykids.com/data', { next: { revalidate: 3600 } })
+
+	•	Crea rutas API con App Router en archivos route.ts.
+	•	Usa loading.tsx, error.tsx, y not-found.tsx donde apliquen.
+	•	Aplica SSG o SSR según corresponda por página.
+
+---
+
+## 🧑‍💼 Panel de administración y manejo de roles
+
+- Implementar un **panel administrativo** accesible solo para usuarios autenticados con rol `admin`.
+- Los roles (`admin`, `customer`) deben almacenarse en Supabase, preferiblemente en la tabla `users` o como una columna adicional en `public.profiles`.
+- El panel `/admin` debe permitir:
+  - Crear, editar y eliminar productos
+  - Gestionar categorías
+  - Visualizar y actualizar el estado de los pedidos
+- Proteger rutas con validación de sesión y rol, tanto desde el servidor como desde el cliente si es necesario.
+- Implementar el layout `AdminLayout` con navegación lateral o superior.
+- Solo usuarios con rol `admin` deben poder acceder y modificar datos del ecommerce.
+- Los formularios del panel deben incluir validación con `zod` y manejar el estado con `useFormState` o `useActionState`.
+- Si el usuario no tiene permisos, redirigirlo a una página de acceso denegado (`/unauthorized`) o al home.
+
+Ejemplo de verificación de rol en Server Component:
+```ts
+import { getSession } from '@/lib/supabase';
+
+export default async function AdminPage() {
+  const { user } = await getSession();
+  if (user?.role !== 'admin') {
+    redirect('/unauthorized');
+  }
+
+  // Renderizar panel de administración
+}
+
+---
+
+🧠 SEO y accesibilidad
+	•	Usa metadata para cada página:
+
+	import type { Metadata } from 'next';
+	export const metadata: Metadata = {
+  		title: 'Inicio | Jenny Kids',
+  		description: 'Tienda de ropa infantil en Colombia',
+	};
+
+
+	•	Usa Image de Next.js para imágenes optimizadas.
+	•	Usa ARIA labels y HTML semántico (<main>, <nav>, <section>) para accesibilidad.
+
+---
+
+🛠️ Convenciones adicionales
+	•	Exportar componentes con export const
+	•	Solo usar 'use client' si el componente lo requiere
+	•	Evita tipos redundantes; deja que TypeScript infiera donde sea posible
+	•	Usa React.FC o React.ReactNode solo si es necesario
+	•	Usa .env.local para configuración
+
+
+---
+
+🔄 Buenas prácticas y calidad de código
+	•	Usa zod para validación de formularios
+	•	Implementa useActionState o server actions para manejar formularios desde el servidor
+	•	Evita any; usa tipado explícito
+	•	Usa control de errores estructurado (try/catch, throw new Error)
+	•	Implementa lazy loading, code splitting y revalidación
+	•	Usa date-fns para manejo de fechas
+	•	Utiliza comentarios 
+
+
+⸻
+
+🎯 Reglas de salida para IA (Cursor)
+	•	Generar componentes completos en .tsx, con imports y exports
+	•	Usar Tailwind exclusivamente
+	•	Respetar la estructura de carpetas sugerida
+	•	El código debe funcionar en Vercel y Supabase
+	•	No dejar TODOs o fragmentos incompletos
+	•	Preferir ejemplos listos para producción
+
+---
+
+## 🧾 Comentarios y documentación en el código
+
+  - Todo código generado debe incluir comentarios en las secciones clave, explicando:
+  - Lógica del flujo
+  - Comportamiento de componentes
+  - Uso de props o dependencias externas
+  - Razón de decisiones técnicas (como manejo de errores, SSR vs SSG)
+
+- Usa comentarios claros y breves, en español. Ejemplo:
+  ```tsx
+  // Renderiza la tarjeta de producto con nombre, imagen y precio
+
+	•	Cuando se implemente un componente o se use uno ya existente, referencia en el comentario el nombre:
+
+	// Usa el componente ProductCard para mostrar cada producto
+
+	•	En formularios, rutas API, y lógica de negocio, documentar validaciones, flujos condicionales, documentar claramente el propósito:
+
+	// Verifica que el total del carrito sea mayor a cero antes de crear la orden
+
+	•	Los comentarios deben ser en español, concisos, y ayudar al futuro mantenimiento del código.
+	•	Evitar comentarios triviales como “esto es un botón”, aunque para mi nivel puedes hacerlo.
+
+	
+---
+
+
