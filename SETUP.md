@@ -44,9 +44,11 @@ NODE_ENV=development
 
 1. Ve a [Supabase](https://app.supabase.com/)
 2. Crea un nuevo proyecto
-3. Ejecuta el esquema SQL desde `packages/db/schema.sql`
-4. Ejecuta el script de corrección desde `packages/db/fix-policies.sql`
+3. **IMPORTANTE**: Ejecuta PRIMERO el esquema SQL desde `packages/db/schema.sql`
+4. **CRÍTICO**: Ejecuta DESPUÉS el script de corrección desde `packages/db/fix-policies.sql` para arreglar las políticas RLS
 5. Copia las credenciales a tu archivo `.env.local`
+
+**⚠️ NOTA IMPORTANTE**: Si ves el error `infinite recursion detected in policy for relation "profiles"`, significa que necesitas ejecutar el archivo `packages/db/fix-policies.sql` en el SQL Editor de Supabase.
 
 ### 5. Ejecutar el proyecto
 
