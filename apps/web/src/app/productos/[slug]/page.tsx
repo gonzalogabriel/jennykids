@@ -3,9 +3,10 @@
 import React, { useState } from 'react'
 import { notFound } from 'next/navigation'
 import Image from 'next/image'
-import { Heart, Share2, Truck, RotateCcw, Shield } from 'lucide-react'
+import Link from 'next/link'
+import { Heart, Share2, Truck, RotateCcw, Shield, Star, ChevronLeft, Plus, Minus } from 'lucide-react'
 
-// Componente Button local
+// Componente Button mejorado
 function Button({ 
   children, 
   onClick, 
@@ -16,22 +17,23 @@ function Button({
 }: {
   children: React.ReactNode
   onClick?: () => void
-  variant?: 'default' | 'outline'
+  variant?: 'default' | 'outline' | 'ghost'
   size?: 'default' | 'lg' | 'xl'
   className?: string
   disabled?: boolean
 }) {
-  const baseClasses = 'inline-flex items-center justify-center rounded-md font-medium transition-colors focus-visible:outline-none disabled:opacity-50 disabled:pointer-events-none'
+  const baseClasses = 'inline-flex items-center justify-center rounded-xl font-semibold transition-all duration-300 focus-visible:outline-none disabled:opacity-50 disabled:pointer-events-none'
   
   const variantClasses = {
-    default: 'bg-black text-white hover:bg-gray-800',
-    outline: 'border border-gray-300 bg-white hover:bg-gray-50'
+    default: 'bg-gradient-to-r from-pink-500 to-purple-600 text-white hover:shadow-lg hover:-translate-y-0.5',
+    outline: 'border-2 border-gray-200 bg-white hover:border-gray-300 hover:shadow-md',
+    ghost: 'hover:bg-gray-100'
   }
   
   const sizeClasses = {
-    default: 'h-10 py-2 px-4 text-sm',
-    lg: 'h-11 px-8 text-sm',
-    xl: 'h-12 px-8 text-base'
+    default: 'h-12 py-3 px-6 text-sm',
+    lg: 'h-14 px-8 text-base',
+    xl: 'h-16 px-10 text-lg'
   }
   
   return (
@@ -45,7 +47,7 @@ function Button({
   )
 }
 
-// Componente ProductImageGallery local
+// Componente ProductImageGallery mejorado
 function ProductImageGallery({ 
   images, 
   productName 
@@ -58,22 +60,22 @@ function ProductImageGallery({
   return (
     <div className="flex flex-col lg:flex-row gap-4">
       {/* Thumbnails */}
-      <div className="order-2 lg:order-1 flex lg:flex-col gap-2 overflow-x-auto lg:overflow-y-auto lg:max-h-96">
+      <div className="order-2 lg:order-1 flex lg:flex-col gap-3 overflow-x-auto lg:overflow-y-auto lg:max-h-96">
         {images.map((image, index) => (
           <button
             key={index}
             onClick={() => setSelectedImage(index)}
-            className={`flex-shrink-0 w-16 h-16 lg:w-20 lg:h-20 border-2 rounded-lg overflow-hidden transition-all ${
+            className={`flex-shrink-0 w-20 h-20 lg:w-24 lg:h-24 border-2 rounded-xl overflow-hidden transition-all duration-300 ${
               selectedImage === index 
-                ? 'border-black' 
+                ? 'border-pink-500 shadow-lg' 
                 : 'border-gray-200 hover:border-gray-300'
             }`}
           >
             <Image
               src={image}
               alt={`${productName} vista ${index + 1}`}
-              width={80}
-              height={80}
+              width={96}
+              height={96}
               className="w-full h-full object-cover"
             />
           </button>
@@ -82,22 +84,26 @@ function ProductImageGallery({
 
       {/* Imagen principal */}
       <div className="order-1 lg:order-2 flex-1">
-        <div className="aspect-square bg-gray-100 rounded-lg overflow-hidden">
+        <div className="aspect-square bg-gradient-to-br from-pink-50 to-purple-50 rounded-2xl overflow-hidden relative">
           <Image
             src={images[selectedImage]}
             alt={`${productName} imagen principal`}
-            width={600}
-            height={600}
-            className="w-full h-full object-cover"
+            fill
+            className="object-cover"
             priority
           />
+          <div className="absolute top-4 right-4">
+            <button className="w-12 h-12 bg-white/80 backdrop-blur-sm rounded-full flex items-center justify-center hover:bg-white transition-colors shadow-lg">
+              <Heart className="w-5 h-5 text-gray-600" />
+            </button>
+          </div>
         </div>
       </div>
     </div>
   )
 }
 
-// Componente SizeSelector local
+// Componente SizeSelector mejorado
 function SizeSelector({ 
   sizes, 
   selectedSize, 
@@ -108,17 +114,17 @@ function SizeSelector({
   onSizeChange: (size: string) => void
 }) {
   return (
-    <div className="space-y-3">
-      <h3 className="text-sm font-medium text-gray-900">Talla</h3>
-      <div className="grid grid-cols-4 gap-2">
+    <div className="space-y-4">
+      <h3 className="text-lg font-semibold text-gray-900">Talla</h3>
+      <div className="grid grid-cols-4 gap-3">
         {sizes.map((size) => (
           <button
             key={size}
             onClick={() => onSizeChange(size)}
-            className={`h-10 border rounded-md text-sm font-medium transition-all ${
+            className={`h-12 border-2 rounded-xl text-sm font-semibold transition-all duration-300 ${
               selectedSize === size
-                ? 'border-black bg-black text-white'
-                : 'border-gray-300 bg-white text-gray-900 hover:border-gray-400'
+                ? 'border-pink-500 bg-pink-500 text-white shadow-lg'
+                : 'border-gray-200 bg-white text-gray-900 hover:border-gray-300 hover:shadow-md'
             }`}
           >
             {size}
@@ -129,7 +135,7 @@ function SizeSelector({
   )
 }
 
-// Componente ColorSelector local
+// Componente ColorSelector mejorado
 function ColorSelector({ 
   colors, 
   selectedColor, 
@@ -140,17 +146,17 @@ function ColorSelector({
   onColorChange: (color: string) => void
 }) {
   return (
-    <div className="space-y-3">
-      <h3 className="text-sm font-medium text-gray-900">Color</h3>
-      <div className="flex gap-2">
+    <div className="space-y-4">
+      <h3 className="text-lg font-semibold text-gray-900">Color</h3>
+      <div className="flex gap-3">
         {colors.map((color) => (
           <button
             key={color.name}
             onClick={() => onColorChange(color.name)}
-            className={`w-8 h-8 rounded-full border-2 transition-all ${
+            className={`w-10 h-10 rounded-full border-2 transition-all duration-300 ${
               selectedColor === color.name
-                ? 'border-black scale-110'
-                : 'border-gray-300 hover:border-gray-400'
+                ? 'border-pink-500 scale-110 shadow-lg'
+                : 'border-gray-300 hover:border-gray-400 hover:scale-105'
             }`}
             style={{ backgroundColor: color.value }}
             title={color.name}
@@ -158,7 +164,7 @@ function ColorSelector({
         ))}
       </div>
       {selectedColor && (
-        <p className="text-sm text-gray-600">
+        <p className="text-sm text-gray-600 font-medium">
           Color seleccionado: {colors.find(c => c.name === selectedColor)?.name}
         </p>
       )}
@@ -172,7 +178,7 @@ const productData = {
   name: 'Vestido Floral Primavera',
   price: 89900,
   originalPrice: 129900,
-  description: 'Hermoso vestido floral perfecto para la primavera. Confeccionado en algodón suave y transpirable, ideal para el día a día de tu pequeña.',
+  description: 'Hermoso vestido floral perfecto para la primavera. Confeccionado en algodón suave y transpirable, ideal para el día a día de tu pequeña. Diseño exclusivo con estampado floral delicado y corte cómodo que permite libertad de movimiento.',
   images: [
     'https://images.unsplash.com/photo-1518831959646-742c3a14ebf7?w=600&h=600&fit=crop',
     'https://images.unsplash.com/photo-1519238263530-99bdd11df2ea?w=600&h=600&fit=crop',
@@ -189,7 +195,9 @@ const productData = {
   inStock: true,
   category: 'Vestidos',
   material: '100% Algodón',
-  care: 'Lavar a máquina en agua fría'
+  care: 'Lavar a máquina en agua fría',
+  rating: 4.8,
+  reviews: 24
 }
 
 interface ProductPageProps {
@@ -233,20 +241,49 @@ export default function ProductPage({ params }: ProductPageProps) {
     }).format(price)
   }
 
+  const discount = productData.originalPrice 
+    ? Math.round((1 - productData.price / productData.originalPrice) * 100)
+    : 0
+
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-gradient-to-br from-pink-50 via-white to-purple-50">
+      {/* Header con navegación */}
+      <header className="bg-white/80 backdrop-blur-md border-b border-gray-100 sticky top-0 z-50">
+        <div className="max-w-7xl mx-auto px-4 py-4">
+          <div className="flex items-center justify-between">
+            <Link href="/" className="flex items-center gap-2">
+              <ChevronLeft className="w-5 h-5 text-gray-600" />
+              <div className="w-8 h-8 bg-gradient-to-br from-pink-500 to-purple-600 rounded-lg flex items-center justify-center">
+                <span className="text-white font-bold text-sm">J</span>
+              </div>
+              <span className="font-semibold text-gray-900">Jenny Kids</span>
+            </Link>
+            <div className="flex items-center gap-2">
+              <button className="p-2 hover:bg-gray-100 rounded-lg transition-colors">
+                <Share2 className="w-5 h-5 text-gray-600" />
+              </button>
+            </div>
+          </div>
+        </div>
+      </header>
+
       {/* Breadcrumb */}
-      <nav className="px-4 py-3 text-sm text-gray-600">
+      <nav className="px-4 py-4 text-sm text-gray-600">
         <div className="max-w-7xl mx-auto">
-          <span>Inicio</span> / <span>Niñas</span> / <span>Vestidos</span> / 
-          <span className="text-gray-900 font-medium"> {productData.name}</span>
+          <Link href="/" className="hover:text-pink-600 transition-colors">Inicio</Link> 
+          <span className="mx-2">/</span>
+          <Link href="/categoria/ninas" className="hover:text-pink-600 transition-colors">Niñas</Link> 
+          <span className="mx-2">/</span>
+          <Link href="/categoria/vestidos" className="hover:text-pink-600 transition-colors">Vestidos</Link> 
+          <span className="mx-2">/</span>
+          <span className="text-gray-900 font-medium">{productData.name}</span>
         </div>
       </nav>
 
       <div className="max-w-7xl mx-auto px-4 py-8">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
           {/* Galería de imágenes */}
-          <div className="lg:sticky lg:top-8">
+          <div className="lg:sticky lg:top-24">
             <ProductImageGallery 
               images={productData.images}
               productName={productData.name}
@@ -254,25 +291,55 @@ export default function ProductPage({ params }: ProductPageProps) {
           </div>
 
           {/* Información del producto */}
-          <div className="space-y-6">
-            {/* Título y precio */}
+          <div className="space-y-8">
+            {/* Título, precio y rating */}
             <div>
-              <h1 className="text-2xl lg:text-3xl font-bold text-gray-900 mb-2">
+              <div className="flex items-center gap-2 mb-3">
+                <span className="bg-pink-100 text-pink-800 text-xs font-medium px-2 py-1 rounded-full">
+                  {productData.category}
+                </span>
+                {productData.inStock && (
+                  <span className="bg-green-100 text-green-800 text-xs font-medium px-2 py-1 rounded-full">
+                    En stock
+                  </span>
+                )}
+              </div>
+              
+              <h1 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-4">
                 {productData.name}
               </h1>
-              <div className="flex items-center gap-3">
-                <span className="text-2xl font-bold text-gray-900">
+              
+              <div className="flex items-center gap-2 mb-4">
+                <div className="flex items-center gap-1">
+                  {[...Array(5)].map((_, i) => (
+                    <Star 
+                      key={i} 
+                      className={`w-4 h-4 ${
+                        i < Math.floor(productData.rating) 
+                          ? 'fill-yellow-400 text-yellow-400' 
+                          : 'text-gray-300'
+                      }`} 
+                    />
+                  ))}
+                </div>
+                <span className="text-sm text-gray-600">
+                  {productData.rating} ({productData.reviews} reseñas)
+                </span>
+              </div>
+              
+              <div className="flex items-center gap-4 mb-6">
+                <span className="text-3xl font-bold text-gray-900">
                   {formatPrice(productData.price)}
                 </span>
                 {productData.originalPrice && (
-                  <span className="text-lg text-gray-500 line-through">
-                    {formatPrice(productData.originalPrice)}
-                  </span>
-                )}
-                {productData.originalPrice && (
-                  <span className="bg-red-100 text-red-800 text-sm font-medium px-2 py-1 rounded">
-                    -{Math.round((1 - productData.price / productData.originalPrice) * 100)}%
-                  </span>
+                  <>
+                    <span className="text-xl text-gray-500 line-through">
+                      {formatPrice(productData.originalPrice)}
+                    </span>
+                    <span className="bg-red-500 text-white text-sm font-bold px-3 py-1 rounded-full">
+                      -{discount}%
+                    </span>
+                  </>
                 )}
               </div>
             </div>
@@ -292,29 +359,29 @@ export default function ProductPage({ params }: ProductPageProps) {
             />
 
             {/* Cantidad */}
-            <div className="space-y-3">
-              <h3 className="text-sm font-medium text-gray-900">Cantidad</h3>
-              <div className="flex items-center border border-gray-300 rounded-md w-fit">
+            <div className="space-y-4">
+              <h3 className="text-lg font-semibold text-gray-900">Cantidad</h3>
+              <div className="flex items-center border-2 border-gray-200 rounded-xl w-fit">
                 <button
                   onClick={() => setQuantity(Math.max(1, quantity - 1))}
-                  className="px-3 py-2 hover:bg-gray-50"
+                  className="p-3 hover:bg-gray-50 transition-colors"
                 >
-                  -
+                  <Minus className="w-4 h-4" />
                 </button>
-                <span className="px-4 py-2 border-x border-gray-300">
+                <span className="px-6 py-3 font-semibold text-lg">
                   {quantity}
                 </span>
                 <button
                   onClick={() => setQuantity(quantity + 1)}
-                  className="px-3 py-2 hover:bg-gray-50"
+                  className="p-3 hover:bg-gray-50 transition-colors"
                 >
-                  +
+                  <Plus className="w-4 h-4" />
                 </button>
               </div>
             </div>
 
             {/* Botones de acción */}
-            <div className="space-y-3">
+            <div className="space-y-4">
               <Button
                 onClick={handleAddToCart}
                 size="xl"
@@ -324,61 +391,82 @@ export default function ProductPage({ params }: ProductPageProps) {
                 {productData.inStock ? 'Agregar al carrito' : 'Agotado'}
               </Button>
               
-              <div className="flex gap-3">
+              <div className="flex gap-4">
                 <Button
                   variant="outline"
                   size="lg"
                   className="flex-1"
                   onClick={() => setIsFavorite(!isFavorite)}
                 >
-                  <Heart className={`w-4 h-4 mr-2 ${isFavorite ? 'fill-current' : ''}`} />
-                  Favoritos
+                  <Heart className={`w-5 h-5 mr-2 ${isFavorite ? 'fill-current text-red-500' : ''}`} />
+                  {isFavorite ? 'En favoritos' : 'Agregar a favoritos'}
                 </Button>
                 <Button variant="outline" size="lg">
-                  <Share2 className="w-4 h-4 mr-2" />
+                  <Share2 className="w-5 h-5 mr-2" />
                   Compartir
                 </Button>
               </div>
             </div>
 
             {/* Información de entrega */}
-            <div className="border-t pt-6 space-y-4">
-              <div className="flex items-center gap-3 text-sm">
-                <Truck className="w-5 h-5 text-gray-600" />
+            <div className="bg-white rounded-2xl p-6 border border-gray-100 space-y-4">
+              <h3 className="text-lg font-semibold text-gray-900 mb-4">Información de entrega</h3>
+              
+              <div className="flex items-center gap-4 text-sm">
+                <div className="w-12 h-12 bg-green-100 rounded-xl flex items-center justify-center">
+                  <Truck className="w-6 h-6 text-green-600" />
+                </div>
                 <div>
-                  <p className="font-medium">Envío gratis</p>
+                  <p className="font-semibold text-gray-900">Envío gratis</p>
                   <p className="text-gray-600">En compras superiores a $150.000</p>
                 </div>
               </div>
               
-              <div className="flex items-center gap-3 text-sm">
-                <RotateCcw className="w-5 h-5 text-gray-600" />
+              <div className="flex items-center gap-4 text-sm">
+                <div className="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center">
+                  <RotateCcw className="w-6 h-6 text-blue-600" />
+                </div>
                 <div>
-                  <p className="font-medium">Devoluciones gratuitas</p>
+                  <p className="font-semibold text-gray-900">Devoluciones gratuitas</p>
                   <p className="text-gray-600">30 días para cambios y devoluciones</p>
                 </div>
               </div>
               
-              <div className="flex items-center gap-3 text-sm">
-                <Shield className="w-5 h-5 text-gray-600" />
+              <div className="flex items-center gap-4 text-sm">
+                <div className="w-12 h-12 bg-purple-100 rounded-xl flex items-center justify-center">
+                  <Shield className="w-6 h-6 text-purple-600" />
+                </div>
                 <div>
-                  <p className="font-medium">Compra segura</p>
+                  <p className="font-semibold text-gray-900">Compra segura</p>
                   <p className="text-gray-600">Pago 100% seguro con MercadoPago</p>
                 </div>
               </div>
             </div>
 
             {/* Descripción del producto */}
-            <div className="border-t pt-6">
-              <h3 className="text-lg font-semibold mb-3">Descripción</h3>
-              <p className="text-gray-700 leading-relaxed mb-4">
+            <div className="bg-white rounded-2xl p-6 border border-gray-100">
+              <h3 className="text-lg font-semibold text-gray-900 mb-4">Descripción</h3>
+              <p className="text-gray-700 leading-relaxed mb-6">
                 {productData.description}
               </p>
               
-              <div className="space-y-2 text-sm">
-                <p><span className="font-medium">Material:</span> {productData.material}</p>
-                <p><span className="font-medium">Cuidado:</span> {productData.care}</p>
-                <p><span className="font-medium">Categoría:</span> {productData.category}</p>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+                <div>
+                  <span className="font-semibold text-gray-900">Material:</span>
+                  <span className="text-gray-600 ml-2">{productData.material}</span>
+                </div>
+                <div>
+                  <span className="font-semibold text-gray-900">Cuidado:</span>
+                  <span className="text-gray-600 ml-2">{productData.care}</span>
+                </div>
+                <div>
+                  <span className="font-semibold text-gray-900">Categoría:</span>
+                  <span className="text-gray-600 ml-2">{productData.category}</span>
+                </div>
+                <div>
+                  <span className="font-semibold text-gray-900">Disponibilidad:</span>
+                  <span className="text-green-600 ml-2 font-medium">En stock</span>
+                </div>
               </div>
             </div>
           </div>
@@ -386,4 +474,4 @@ export default function ProductPage({ params }: ProductPageProps) {
       </div>
     </div>
   )
-} 
+}
