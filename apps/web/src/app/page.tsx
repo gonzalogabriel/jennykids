@@ -16,6 +16,96 @@ function getCategoryColor(categoryName: string): string {
   return categoryColors[key] || categoryColors.Default;
 }
 
+// Componente para tarjetas de producto destacado
+function FeaturedProductCard({ 
+  title, 
+  price, 
+  originalPrice, 
+  image, 
+  href 
+}: {
+  title: string
+  price: string
+  originalPrice?: string
+  image: string
+  href: string
+}) {
+  return (
+    <Link href={href} className="group">
+      <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-lg transition-all duration-300 group-hover:-translate-y-1">
+        <div className="aspect-square bg-gradient-to-br from-pink-50 to-purple-50 relative overflow-hidden">
+          <Image
+            src={image}
+            alt={title}
+            fill
+            className="object-cover group-hover:scale-105 transition-transform duration-300"
+          />
+          <div className="absolute top-3 right-3">
+            <button className="w-8 h-8 bg-white/80 backdrop-blur-sm rounded-full flex items-center justify-center hover:bg-white transition-colors">
+              <Heart className="w-4 h-4 text-gray-600" />
+            </button>
+          </div>
+          {originalPrice && (
+            <div className="absolute top-3 left-3">
+              <span className="bg-red-500 text-white text-xs font-medium px-2 py-1 rounded-full">
+                -30%
+              </span>
+            </div>
+          )}
+        </div>
+        <div className="p-4">
+          <h3 className="font-medium text-gray-900 mb-2 group-hover:text-pink-600 transition-colors">
+            {title}
+          </h3>
+          <div className="flex items-center gap-2">
+            <span className="text-lg font-bold text-gray-900">{price}</span>
+            {originalPrice && (
+              <span className="text-sm text-gray-500 line-through">{originalPrice}</span>
+            )}
+          </div>
+          <div className="flex items-center gap-1 mt-2">
+            {[...Array(5)].map((_, i) => (
+              <Star key={i} className="w-3 h-3 fill-yellow-400 text-yellow-400" />
+            ))}
+            <span className="text-xs text-gray-500 ml-1">(24)</span>
+          </div>
+        </div>
+      </div>
+    </Link>
+  )
+}
+
+// Componente para categorías
+function CategoryCard({ 
+  name, 
+  description, 
+  image, 
+  href 
+}: {
+  name: string
+  description: string
+  image: string
+  href: string
+}) {
+  return (
+    <Link href={href} className="group">
+      <div className="relative h-48 bg-gradient-to-br from-blue-50 to-indigo-100 rounded-2xl overflow-hidden hover:shadow-lg transition-all duration-300 group-hover:-translate-y-1">
+        <Image
+          src={image}
+          alt={name}
+          fill
+          className="object-cover group-hover:scale-105 transition-transform duration-300"
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
+        <div className="absolute bottom-4 left-4 text-white">
+          <h3 className="text-lg font-bold mb-1">{name}</h3>
+          <p className="text-sm opacity-90">{description}</p>
+        </div>
+      </div>
+    </Link>
+  )
+}
+
 export default async function HomePage() {
   let categories: Category[] = []
   let products: Product[] = []
