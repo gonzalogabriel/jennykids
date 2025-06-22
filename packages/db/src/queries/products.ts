@@ -1,16 +1,27 @@
 import { supabase, supabaseAdmin } from '../client'
 import type { Database } from '../types/database.types'
 
-type Product = Database['public']['Tables']['products']['Row']
-type ProductInsert = Database['public']['Tables']['products']['Insert']
-type ProductUpdate = Database['public']['Tables']['products']['Update']
+export type Product = Database['public']['Tables']['products']['Row']
+export type ProductInsert = Database['public']['Tables']['products']['Insert']
+export type ProductUpdate = Database['public']['Tables']['products']['Update']
 
 // Obtener todos los productos activos
 export async function getProducts() {
   const { data, error } = await supabase
     .from('products')
     .select(`
-      *,
+      id,
+      name,
+      slug,
+      description,
+      price,
+      compare_at_price,
+      category_id,
+      image_urls,
+      stock_quantity,
+      is_active,
+      created_at,
+      updated_at,
       categories (
         id,
         name,
@@ -20,7 +31,11 @@ export async function getProducts() {
     .eq('is_active', true)
     .order('created_at', { ascending: false })
 
-  if (error) throw error
+  if (error) {
+    console.error('Error al obtener productos con su categoría:', error)
+    throw error
+  }
+
   return data
 }
 

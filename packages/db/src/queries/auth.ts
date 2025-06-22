@@ -1,9 +1,9 @@
 import { supabase, supabaseAdmin } from '../client'
 import type { Database } from '../types/database.types'
 
-type Profile = Database['public']['Tables']['profiles']['Row']
-type ProfileInsert = Database['public']['Tables']['profiles']['Insert']
-type ProfileUpdate = Database['public']['Tables']['profiles']['Update']
+export type Profile = Database['public']['Tables']['profiles']['Row']
+export type ProfileInsert = Database['public']['Tables']['profiles']['Insert']
+export type ProfileUpdate = Database['public']['Tables']['profiles']['Update']
 
 // Obtener perfil del usuario
 export async function getUserProfile(userId: string) {

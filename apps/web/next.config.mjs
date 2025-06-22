@@ -1,11 +1,19 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   images: {
-    domains: [
-      'localhost',
-      'images.unsplash.com',
-      process.env.NEXT_PUBLIC_SUPABASE_PROJECT_ID + '.supabase.co'
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'dummyimage.com',
+      },
+      {
+        protocol: 'https',
+        hostname: 'eacwvwjecuzozenjwhww.supabase.co',
+      },
     ],
+  },
+  experimental: {
+    serverComponentsExternalPackages: ['@node-rs/argon2'],
   },
   transpilePackages: ['@jennykids/ui', '@jennykids/db', '@jennykids/utils'],
 }

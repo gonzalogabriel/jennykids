@@ -7,28 +7,34 @@ interface SizeSelectorProps {
   sizes: string[]
   selectedSize?: string
   onSizeChange: (size: string) => void
-  className?: string
 }
 
-export function SizeSelector({ 
-  sizes, 
-  selectedSize, 
-  onSizeChange, 
-  className 
+export function SizeSelector({
+  sizes,
+  selectedSize,
+  onSizeChange,
 }: SizeSelectorProps) {
   return (
-    <div className={cn('space-y-3', className)}>
-      <h3 className="text-sm font-medium text-gray-900">Talla</h3>
-      <div className="grid grid-cols-4 gap-2">
+    <div className="space-y-3">
+      <div className="flex justify-between items-center">
+        <h3 className="text-sm font-medium text-gray-900">Talla</h3>
+        <a href="#" className="text-sm font-medium text-pink-600 hover:text-pink-500">
+          Guía de tallas
+        </a>
+      </div>
+
+      <div className="grid grid-cols-5 gap-2">
         {sizes.map((size) => (
           <button
             key={size}
+            type="button"
             onClick={() => onSizeChange(size)}
             className={cn(
-              'h-10 border rounded-md text-sm font-medium transition-all',
+              'h-10 border rounded-md text-sm font-medium transition-colors',
+              'disabled:opacity-50 disabled:cursor-not-allowed',
               selectedSize === size
-                ? 'border-black bg-black text-white'
-                : 'border-gray-300 bg-white text-gray-900 hover:border-gray-400'
+                ? 'border-pink-500 bg-pink-500 text-white'
+                : 'border-gray-300 bg-white text-gray-900 hover:border-pink-500',
             )}
           >
             {size}

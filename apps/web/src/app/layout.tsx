@@ -1,13 +1,13 @@
 import './globals.css'
-import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
 import { SupabaseProvider } from '@/lib/providers/supabase-provider'
+import { Header, Footer } from '@jennykids/ui'
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-inter' })
 
-export const metadata: Metadata = {
-  title: 'Jenny Kids - Tienda de Ropa Infantil',
-  description: 'La mejor tienda de ropa infantil en Colombia',
+export const metadata = {
+  title: 'Jenny Kids - Ropa para niños y niñas',
+  description: 'La mejor tienda de ropa infantil en Colombia. Calidad y estilo para los más pequeños.',
 }
 
 export default function RootLayout({
@@ -17,9 +17,11 @@ export default function RootLayout({
 }) {
   return (
     <html lang="es">
-      <body className={`${inter.variable} font-sans`}>
+      <body className={`${inter.variable} font-sans bg-gray-50 text-gray-800`}>
         <SupabaseProvider>
+          <Header />
           {children}
+          <Footer />
         </SupabaseProvider>
       </body>
     </html>

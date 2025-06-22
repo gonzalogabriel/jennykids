@@ -172,6 +172,17 @@ CREATE POLICY "Los admins pueden ver todos los items de órdenes" ON order_items
   )
 );
 
+-- Otorgar permisos a los roles
+-- Grant public access to read categories and products
+GRANT SELECT ON TABLE public.categories TO anon;
+GRANT SELECT ON TABLE public.products TO anon;
+
+-- Grant access to authenticated users for their own data
+GRANT SELECT, INSERT, UPDATE, DELETE ON TABLE public.cart_items TO authenticated;
+GRANT SELECT, INSERT ON TABLE public.orders TO authenticated;
+GRANT SELECT, INSERT ON TABLE public.order_items TO authenticated;
+GRANT SELECT, UPDATE ON TABLE public.profiles TO authenticated;
+
 -- Crear índices para mejorar el rendimiento
 CREATE INDEX IF NOT EXISTS idx_products_category_id ON products(category_id);
 CREATE INDEX IF NOT EXISTS idx_products_is_active ON products(is_active);
